@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Go South Africa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --green: #2C5F3F;
+            --green-mid: #3a7a52;
+            --green-pale: #EEF4F0;
+            --gold: #B8891E;
+            --cream: #F7F4EE;
+            --dark: #1A1A1A;
+            --radius-sm: 8px;
+            --radius-lg: 16px;
+            --muted: #6B6B6B;
+            --rule: #D8D0C4;
+            --white: #FFFFFF;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Jost', sans-serif;
+        }
+        body { font-family: var(--font-sans); color: var(--dark); background: var(--white); scroll-behavior: smooth; }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 0 48px; height: 72px;
+            box-sizing: border-box;
+            background: var(--white);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--rule);
+        }
+        .nav-logo { font-family: var(--font-serif); font-size: 20px; font-weight: 500; text-decoration: none; color: var(--dark); justify-self: start; }
+        .nav-logo span { color: var(--gold); }
+        .nav-links { display: flex; gap: 36px; justify-self: center; }
+        .nav-link { font-size: 14px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: var(--dark); transition: 0.2s; }
+        .nav-link:hover { color: var(--gold); }
+        .nav-link.active { color: var(--green); }
+        .nav-menu-toggle {
+            display: none;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--dark);
+            background: transparent;
+            border: 1px solid var(--rule);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            cursor: pointer;
+        }
+        .nav-cta { font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); background: var(--green); border: none; padding: 10px 22px; cursor: pointer; transition: 0.2s; border-radius: var(--radius-sm); justify-self: end; }
+        .nav-cta:hover { background: var(--green-mid); }
+
+        .section { padding: 140px 80px 100px; }
+        .eyebrow {
+            font-size: 11px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 16px;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--gold); }
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(36px, 4vw, 56px);
+            font-weight: 300;
+            line-height: 1.1;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+        .section-title em { font-style: italic; color: var(--gold); }
+        .section-body {
+            font-size: 16px; font-weight: 300; line-height: 1.75;
+            color: var(--muted);
+            max-width: 560px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: start;
+            margin-top: 60px;
+        }
+
+        .contact-form {
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        .form-row { display: flex; gap: 16px; }
+        .form-row > div { flex: 1; }
+        .form-label {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 6px;
+        }
+        .form-input {
+            font-size: 13px;
+            font-weight: 300;
+            color: var(--dark);
+            background: var(--white);
+            border: 1px solid var(--rule);
+            padding: 12px 16px;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-input { border-radius: var(--radius-sm); }
+        .form-input:focus { border-color: var(--green); }
+        .form-input::placeholder { color: var(--muted); }
+        .form-textarea {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--dark);
+            background: var(--white);
+            border: 1px solid var(--rule);
+            padding: 12px 16px;
+            width: 100%;
+            height: 120px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-textarea { border-radius: var(--radius-sm); }
+        .form-textarea:focus { border-color: var(--green); }
+        .form-textarea::placeholder { color: var(--muted); }
+        .form-submit {
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--white);
+            background: var(--green);
+            border: none;
+            padding: 14px 32px;
+            cursor: pointer;
+            transition: background 0.2s;
+            align-self: flex-start;
+        }
+        .form-submit { border-radius: var(--radius-sm); }
+        .form-submit:hover { background: var(--green-mid); }
+        .success-message {
+            display: none;
+            background: var(--green-pale);
+            border: 1px solid var(--green);
+            padding: 20px 24px;
+            max-width: 400px;
+        }
+        .success-message p {
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--green);
+            line-height: 1.6;
+        }
+
+        .contact-info {
+            padding-top: 8px;
+            position: sticky;
+            top: 96px;
+        }
+        .contact-detail {
+            padding: 28px 0;
+            border-bottom: 1px solid var(--rule);
+        }
+        .contact-detail:first-child { border-top: 1px solid var(--rule); }
+        .contact-detail-label {
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .contact-detail-value {
+            font-family: var(--font-serif);
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--dark);
+        }
+        .contact-note {
+            margin-top: 28px;
+            padding: 24px;
+            background: var(--green-pale);
+            border-left: 3px solid var(--green);
+            border-radius: var(--radius-sm);
+        }
+        .contact-note p {
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--dark);
+        }
+
+        footer {
+            background: var(--dark);
+            padding: 60px 80px 40px;
+        }
+        .footer-top {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding-bottom: 48px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 40px;
+        }
+        .footer-logo { font-family: var(--font-serif); font-size: 24px; font-weight: 300; color: var(--white); }
+        .footer-logo span { color: var(--gold); }
+        .footer-tagline { font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.4); margin-top: 8px; }
+        .footer-links { display: flex; gap: 32px; }
+        .footer-link { font-size: 12px; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+        .footer-link:hover { color: var(--white); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+        .footer-copy { font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.3); }
+
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--white);
+            width: 560px; max-width: 90vw; max-height: 90vh;
+            overflow-y: auto;
+            padding: 56px;
+            position: relative;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer; }
+        .modal-title { font-family: var(--font-serif); font-size: 32px; font-weight: 300; color: var(--dark); margin-bottom: 8px; }
+        .modal-sub { font-size: 14px; font-weight: 300; color: var(--muted); margin-bottom: 32px; line-height: 1.6; }
+        .modal-form { display: flex; flex-direction: column; gap: 16px; }
+        .modal-form .form-row { display: flex; gap: 12px; }
+        .modal-form .form-input { font-size: 13px; font-weight: 300; border: 1px solid var(--rule); padding: 12px 16px; width: 100%; outline: none; }
+        .modal-form .form-input:focus { border-color: var(--green); }
+        .modal-form .form-textarea { height: 90px; }
+        .modal-form .form-submit { align-self: flex-start; }
+        .modal-form .success-message { max-width: 100%; }
+
+        @media (max-width: 900px) {
+            nav {
+                position: sticky;
+                top: 0;
+                grid-template-columns: 1fr auto auto;
+                grid-template-rows: auto auto;
+                height: auto;
+                padding: 12px 20px;
+                gap: 10px;
+                z-index: 1000;
+                background: var(--white);
+                box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            }
+            .nav-logo { grid-column: 1; grid-row: 1; }
+            .nav-menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                grid-column: 2;
+                grid-row: 1;
+            }
+            .nav-links {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                justify-self: stretch;
+                width: 100%;
+                display: none;
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding-top: 12px;
+                border-top: 1px solid var(--rule);
+                margin-top: 0;
+            }
+            nav.mobile-open .nav-links { display: grid; }
+            .nav-link {
+                display: block;
+                text-align: center;
+                padding: 10px 8px;
+                background: var(--cream);
+                border: 1px solid var(--rule);
+                border-radius: var(--radius-sm);
+                color: var(--dark);
+            }
+            .nav-cta {
+                grid-column: 3;
+                grid-row: 1;
+                justify-self: end;
+                width: auto;
+                padding: 12px 16px;
+            }
+            .contact-grid { grid-template-columns: 1fr; }
+            .contact-info { position: static; }
+        }
+        @media (max-width: 768px) {
+            nav { padding: 12px 16px; }
+            .nav-menu-toggle, .nav-cta { padding: 10px 12px; font-size: 11px; }
+            .section { padding: 120px 24px 80px; }
+            .form-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="mainNav">
+        <a href="index.html" class="nav-logo">Go <span>South Africa</span></a>
+        <button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="mainNavLinks">Menu</button>
+        <div class="nav-links" id="mainNavLinks">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="itinerary.html" class="nav-link">The Trip</a>
+            <a href="how.html" class="nav-link">How It Works</a>
+            <a href="about-us.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link active">Contact</a>
+        </div>
+        <button class="nav-cta" onclick="openModal()">Enquire Now</button>
+    </nav>
+
+    <section class="section">
+        <div style="margin-bottom:60px;">
+            <p class="eyebrow">Get in touch</p>
+            <h1 class="section-title">We'd love to <em>hear from you.</em></h1>
+            <p class="section-body">Whether you have a question, want to talk through the trip, or you're ready to enquire — reach out. A real person responds.</p>
+        </div>
+
+        <div class="contact-grid">
+            <div>
+                <form class="contact-form" id="contactForm" onsubmit="handleContactForm(event)">
+                    <input type="hidden" name="_subject" value="Go South Africa — Contact form">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="false">
+                    <div class="form-row">
+                        <div>
+                            <label class="form-label" for="contact-first">First name</label>
+                            <input class="form-input" id="contact-first" name="first_name" type="text" placeholder="Carol" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="contact-last">Last name</label>
+                            <input class="form-input" id="contact-last" name="last_name" type="text" placeholder="Smith">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label" for="contact-email">Email address</label>
+                        <input class="form-input" id="contact-email" name="email" type="email" placeholder="carol@email.com" required>
+                    </div>
+                    <div>
+                        <label class="form-label" for="contact-phone">Phone (optional)</label>
+                        <input class="form-input" id="contact-phone" name="phone" type="tel" placeholder="(310) 555-0100">
+                    </div>
+                    <div>
+                        <label class="form-label" for="contact-message">What's on your mind?</label>
+                        <textarea class="form-textarea" id="contact-message" name="message" placeholder="Tell us what you'd like to know, or just say hello."></textarea>
+                    </div>
+                    <div>
+                        <label class="form-label" for="contact-hear">How did you hear about us?</label>
+                        <input class="form-input" id="contact-hear" name="how_did_you_hear" type="text" placeholder="Friend, family, shuttle...">
+                    </div>
+                    <button class="form-submit" type="submit" id="contactSubmitBtn">Send Message</button>
+                    <p id="contactFormError" class="success-message" style="display:none;background:#fff5f5;border-color:#c53030;color:#742a2a;">
+                        Something went wrong sending your message. Please try again or email us directly.
+                    </p>
+                    <div id="contactSuccess" class="success-message">
+                        <p>✓ Message received. We'll be in touch within 24 hours — usually sooner.</p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="contact-info">
+                <div class="contact-detail">
+                    <div class="contact-detail-label">Email</div>
+                    <div class="contact-detail-value">hello@gosouthafrica.com</div>
+                </div>
+                <div class="contact-detail">
+                    <div class="contact-detail-label">First departure</div>
+                    <div class="contact-detail-value">November 2026 · Cape Town</div>
+                </div>
+                <div class="contact-detail">
+                    <div class="contact-detail-label">Based in</div>
+                    <div class="contact-detail-value">Los Angeles, California</div>
+                </div>
+                <div class="contact-detail">
+                    <div class="contact-detail-label">Response time</div>
+                    <div class="contact-detail-value">Within 24 hours</div>
+                </div>
+
+                <div class="contact-note" style="margin-top:32px;">
+                    <p>We keep our group to 10–20 people by design. Once the November 2026 departure is full, we'll be opening a waitlist for future trips. If you're curious, reach out now — we'd rather have the conversation early.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-top">
+            <div>
+                <div class="footer-logo">Go <span>South Africa</span></div>
+                <div class="footer-tagline">Small-group travel, personally curated. Cape Town, November 2026.</div>
+            </div>
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">Home</a>
+                <a href="itinerary.html" class="footer-link">The Trip</a>
+                <a href="how.html" class="footer-link">How It Works</a>
+                <a href="about-us.html" class="footer-link">About</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-copy">© 2026 Go South Africa. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="inquiryModal" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2 class="modal-title">Register your interest</h2>
+            <p class="modal-sub">Tell us a little about yourself and we'll be in touch within 24 hours to answer questions and schedule a call.</p>
+            <form class="modal-form" onsubmit="handleModalForm(event)">
+                <div class="form-row">
+                    <input class="form-input" type="text" placeholder="First name" required>
+                    <input class="form-input" type="text" placeholder="Last name">
+                </div>
+                <input class="form-input" type="email" placeholder="Email address" required>
+                <input class="form-input" type="tel" placeholder="Phone (optional)">
+                <textarea class="form-textarea" placeholder="Any questions or things you'd like us to know?"></textarea>
+                <button class="form-submit" type="submit">Send Enquiry</button>
+                <div id="modalSuccess" class="success-message">
+                    <p>✓ Received. We'll be in touch within 24 hours. Welcome to the list.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    function openModal() {
+        document.getElementById('inquiryModal').classList.add('open');
+    }
+    function closeModal() {
+        document.getElementById('inquiryModal').classList.remove('open');
+    }
+    document.getElementById('inquiryModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+    async function handleContactForm(e) {
+        e.preventDefault();
+        var form = e.target;
+        var btn = document.getElementById('contactSubmitBtn');
+        var errEl = document.getElementById('contactFormError');
+        var okEl = document.getElementById('contactSuccess');
+        errEl.style.display = 'none';
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        try {
+            var fd = new FormData(form);
+            var res = await fetch('https://formsubmit.co/ajax/samarcher9%40gmail.com', {
+                method: 'POST',
+                body: fd,
+                headers: { Accept: 'application/json' }
+            });
+            var data = await res.json().catch(function() { return {}; });
+            if (!res.ok) throw new Error(data.message || 'Request failed');
+            okEl.style.display = 'block';
+            btn.style.display = 'none';
+            form.querySelectorAll('input:not([type="hidden"]), textarea').forEach(function(el) {
+                el.value = '';
+            });
+        } catch (err) {
+            errEl.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = 'Send Message';
+        }
+    }
+    function handleModalForm(e) {
+        e.preventDefault();
+        document.getElementById('modalSuccess').style.display = 'block';
+        e.target.querySelector('button[type="submit"]').style.display = 'none';
+    }
+
+    const nav = document.getElementById('mainNav');
+    const menuToggle = nav ? nav.querySelector('.nav-menu-toggle') : null;
+    const navLinks = nav ? nav.querySelectorAll('.nav-links .nav-link') : [];
+
+    if (nav && menuToggle) {
+        menuToggle.addEventListener('click', function() {
+            const isOpen = nav.classList.toggle('mobile-open');
+            menuToggle.setAttribute('aria-expanded', String(isOpen));
+            menuToggle.textContent = isOpen ? 'Close' : 'Menu';
+        });
+
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 900) {
+                    nav.classList.remove('mobile-open');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.textContent = 'Menu';
+                }
+            });
+        });
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 900) {
+                nav.classList.remove('mobile-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.textContent = 'Menu';
+            }
+        });
+    }
+    </script>
+    <script async type='text/javascript' src='https://static.klaviyo.com/onsite/js/Yw7cUD/klaviyo.js?company_id=Yw7cUD'></script>
+    <script type="text/javascript">
+      //Initialize Klaviyo object on page load
+      !function(){if(!window.klaviyo){window._klOnsite=window._klOnsite||[];try{window.klaviyo=new Proxy({},{get:function(n,i){return"push"===i?function(){var n;(n=window._klOnsite).push.apply(n,arguments)}:function(){for(var n=arguments.length,o=new Array(n),w=0;w<n;w++)o[w]=arguments[w];var t="function"==typeof o[o.length-1]?o.pop():void 0,e=new Promise((function(n){window._klOnsite.push([i].concat(o,[function(i){t&&t(i),n(i)}]))}));return e}}})}catch(n){window.klaviyo=window.klaviyo||[],window.klaviyo.push=function(){var n;(n=window._klOnsite).push.apply(n,arguments)}}}}();
+    </script>
+</body>
+</html>

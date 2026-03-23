@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Trip | Go South Africa — 11 Days Cape Town & Safari</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --green: #2C5F3F;
+            --green-mid: #3a7a52;
+            --green-pale: #EEF4F0;
+            --gold: #B8891E;
+            --gold-pale: #F9F3E8;
+            --cream: #F7F4EE;
+            --dark: #1A1A1A;
+            --muted: #6B6B6B;
+            --rule: #D8D0C4;
+            --white: #FFFFFF;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Jost', sans-serif;
+            --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --radius-sm: 8px;
+            --radius-lg: 16px;
+        }
+        body { font-family: var(--font-sans); color: var(--dark); background: var(--cream); scroll-behavior: smooth; }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 0 48px; height: 72px;
+            box-sizing: border-box;
+            background: var(--white);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--rule);
+        }
+        .nav-logo { font-family: var(--font-serif); font-size: 20px; font-weight: 500; text-decoration: none; color: var(--dark); justify-self: start; }
+        .nav-logo span { color: var(--gold); }
+        .nav-links { display: flex; gap: 36px; justify-self: center; }
+        .nav-link { font-size: 14px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: var(--dark); transition: 0.2s; }
+        .nav-link:hover { color: var(--gold); }
+        .nav-link.active { color: var(--green); }
+        .nav-menu-toggle {
+            display: none;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--dark);
+            background: transparent;
+            border: 1px solid var(--rule);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            cursor: pointer;
+        }
+        .nav-cta { font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); background: var(--green); border: none; padding: 10px 22px; cursor: pointer; transition: 0.2s; border-radius: var(--radius-sm); justify-self: end; }
+        .nav-cta:hover { background: var(--green-mid); }
+
+        .trip-hero {
+            height: 80vh;
+            min-height: 600px;
+            display: flex; align-items: flex-end;
+            padding: 80px;
+            margin-top: 72px;
+            margin-left: 80px;
+            margin-right: 80px;
+            margin-bottom: 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+        }
+        .trip-hero-carousel {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .trip-hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s var(--ease);
+            pointer-events: none;
+        }
+        .trip-hero-slide.active {
+            opacity: 1;
+        }
+        .trip-hero-slide img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+        }
+        .trip-hero-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            color: var(--white);
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.2s;
+            backdrop-filter: blur(6px);
+        }
+        .trip-hero-nav:hover {
+            background: rgba(255,255,255,0.35);
+        }
+        .trip-hero-nav:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+        .trip-hero-prev { left: 20px; }
+        .trip-hero-next { right: 20px; }
+        .trip-hero-counter {
+            position: absolute;
+            top: 28px;
+            right: 28px;
+            z-index: 2;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.9);
+            background: rgba(0,0,0,0.35);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            backdrop-filter: blur(8px);
+        }
+        .trip-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(26,26,26,0.9) 0%, rgba(26,26,26,0.4) 50%, transparent 100%);
+            border-radius: var(--radius-lg);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .trip-hero-content { position: relative; z-index: 3; max-width: 720px; }
+        .eyebrow {
+            font-size: 11px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase;
+            color: rgba(184,137,30,0.9); margin-bottom: 16px;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--gold); }
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(42px, 5vw, 68px);
+            font-weight: 300;
+            line-height: 1.1;
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+        .section-title em { font-style: italic; color: rgba(255,255,255,0.8); }
+        .section-body {
+            font-size: 17px; font-weight: 400; line-height: 1.75;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 40px;
+        }
+        .hero-chips { display: flex; gap: 20px; flex-wrap: wrap; }
+        .hero-chip {
+            background: rgba(255,255,255,0.08);
+            padding: 14px 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: var(--radius-sm);
+        }
+        .hero-chip-label {
+            font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 4px;
+        }
+        .hero-chip-value {
+            font-family: var(--font-serif);
+            font-size: 16px;
+            color: var(--white);
+        }
+
+        .day-timeline { padding: 80px; background: var(--white); border-radius: var(--radius-lg); margin: 0 80px 80px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+        .day-header {
+            display: flex; align-items: baseline; gap: 24px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--rule);
+            transition: border-color 0.2s;
+        }
+        .day-header:hover { border-color: var(--green); }
+        .day-header.open { border-color: var(--green); }
+        .day-num {
+            font-size: 11px; font-weight: 300; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--gold); white-space: nowrap; min-width: 60px;
+        }
+        .day-title {
+            font-family: var(--font-serif);
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--dark);
+            flex: 1;
+        }
+        .day-subtitle {
+            font-size: 13px; font-weight: 300; color: var(--muted); font-style: italic;
+        }
+        .day-toggle {
+            font-size: 20px; color: var(--green);
+            transition: transform 0.3s;
+            margin-left: auto;
+        }
+        .day-header.open .day-toggle { transform: rotate(45deg); }
+        .day-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s var(--ease);
+        }
+        .day-body.open { max-height: 800px; }
+        .day-body-inner {
+            padding: 24px 0 40px 84px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        .day-highlights { display: flex; flex-direction: column; gap: 10px; }
+        .day-highlight-item {
+            font-size: 15px; font-weight: 400; color: var(--dark); line-height: 1.5;
+            display: flex; gap: 12px; align-items: flex-start;
+        }
+        .day-highlight-item::before {
+            content: '—';
+            color: var(--gold);
+            flex-shrink: 0;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+        .day-meal {
+            background: var(--cream);
+            padding: 20px;
+            border-left: 3px solid var(--gold);
+            border-radius: var(--radius-sm);
+        }
+        .day-meal-label {
+            font-size: 10px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 6px;
+        }
+        .day-meal-name {
+            font-family: var(--font-serif);
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+        .day-meal-desc {
+            font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.6;
+        }
+
+        .included-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--rule);
+            margin-top: 60px;
+        }
+        .included-item {
+            background: var(--white);
+            padding: 36px 32px;
+            border-radius: var(--radius-sm);
+        }
+        .included-icon {
+            width: 36px; height: 36px;
+            background: var(--green-pale);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            margin-bottom: 16px;
+            border-radius: var(--radius-sm);
+        }
+        .included-title {
+            font-family: var(--font-serif);
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+        .included-desc {
+            font-size: 15px; font-weight: 400; color: var(--muted); line-height: 1.65;
+        }
+
+        .btn-primary {
+            font-size: 12px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--white); background: var(--gold); border: none;
+            padding: 14px 32px; cursor: pointer; transition: all 0.2s;
+            text-decoration: none; display: inline-block;
+        }
+        .btn-primary { border-radius: var(--radius-sm); }
+        .btn-primary:hover { background: #a07618; transform: translateY(-1px); }
+
+        footer {
+            background: var(--dark);
+            padding: 60px 80px 40px;
+        }
+        .footer-top {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding-bottom: 48px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 40px;
+        }
+        .footer-logo { font-family: var(--font-serif); font-size: 24px; font-weight: 300; color: var(--white); }
+        .footer-logo span { color: var(--gold); }
+        .footer-tagline { font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.4); margin-top: 8px; }
+        .footer-links { display: flex; gap: 32px; }
+        .footer-link { font-size: 12px; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+        .footer-link:hover { color: var(--white); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+        .footer-copy { font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.3); }
+
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--white);
+            width: 560px; max-width: 90vw; max-height: 90vh;
+            overflow-y: auto;
+            padding: 56px;
+            position: relative;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer; }
+        .modal-title { font-family: var(--font-serif); font-size: 32px; font-weight: 300; color: var(--dark); margin-bottom: 8px; }
+        .modal-sub { font-size: 14px; font-weight: 300; color: var(--muted); margin-bottom: 32px; line-height: 1.6; }
+        .modal-form { display: flex; flex-direction: column; gap: 16px; }
+        .form-row { display: flex; gap: 12px; }
+        .form-input { font-size: 13px; font-weight: 300; border: 1px solid var(--rule); padding: 12px 16px; width: 100%; outline: none; }
+        .form-input { border-radius: var(--radius-sm); }
+        .form-input:focus { border-color: var(--green); }
+        .form-textarea { font-size: 13px; font-weight: 300; border: 1px solid var(--rule); padding: 12px 16px; width: 100%; height: 90px; resize: vertical; outline: none; border-radius: var(--radius-sm); }
+        .form-textarea:focus { border-color: var(--green); }
+        .form-submit { font-size: 12px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); background: var(--green); border: none; padding: 14px 32px; cursor: pointer; align-self: flex-start; }
+        .form-submit:hover { background: var(--green-mid); }
+        .success-message { display: none; background: var(--green-pale); border: 1px solid var(--green); padding: 20px 24px; }
+        .success-message p { font-size: 14px; font-weight: 300; color: var(--green); line-height: 1.6; }
+
+        @media (max-width: 900px) {
+            nav {
+                position: sticky;
+                top: 0;
+                grid-template-columns: 1fr auto auto;
+                grid-template-rows: auto auto;
+                height: auto;
+                padding: 12px 20px;
+                gap: 10px;
+                z-index: 1000;
+                background: var(--white);
+                box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            }
+            .nav-logo { grid-column: 1; grid-row: 1; }
+            .nav-menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                grid-column: 2;
+                grid-row: 1;
+            }
+            .nav-links {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                justify-self: stretch;
+                width: 100%;
+                display: none;
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding-top: 12px;
+                border-top: 1px solid var(--rule);
+                margin-top: 0;
+            }
+            nav.mobile-open .nav-links { display: grid; }
+            .nav-link {
+                display: block;
+                text-align: center;
+                padding: 10px 8px;
+                background: var(--cream);
+                border: 1px solid var(--rule);
+                border-radius: var(--radius-sm);
+                color: var(--dark);
+            }
+            .nav-cta {
+                grid-column: 3;
+                grid-row: 1;
+                justify-self: end;
+                width: auto;
+                padding: 12px 16px;
+            }
+        }
+        @media (max-width: 768px) {
+            nav { padding: 12px 16px; }
+            .nav-menu-toggle, .nav-cta { padding: 10px 12px; font-size: 11px; }
+            .trip-hero { margin-left: 24px; margin-right: 24px; padding: 40px 24px; }
+            .trip-hero-prev { left: 12px; }
+            .trip-hero-next { right: 12px; }
+            .trip-hero-nav { width: 40px; height: 40px; font-size: 18px; }
+            .trip-hero-counter { top: 20px; right: 16px; padding: 8px 12px; font-size: 10px; }
+            .day-timeline { margin: 0 24px 40px; padding: 40px 24px; }
+            .day-body-inner { grid-template-columns: 1fr; padding-left: 0; }
+            .included-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="mainNav">
+        <a href="index.html" class="nav-logo">Go <span>South Africa</span></a>
+        <button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="mainNavLinks">Menu</button>
+        <div class="nav-links" id="mainNavLinks">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="itinerary.html" class="nav-link active">The Trip</a>
+            <a href="how.html" class="nav-link">How It Works</a>
+            <a href="about-us.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link">Contact</a>
+        </div>
+        <button class="nav-cta" onclick="openModal()">Enquire Now</button>
+    </nav>
+
+    <div class="trip-hero" id="tripHero">
+        <div class="trip-hero-carousel" id="tripHeroCarousel" aria-label="Trip photo gallery"></div>
+        <button type="button" class="trip-hero-nav trip-hero-prev" id="tripHeroPrev" aria-label="Previous photo">‹</button>
+        <button type="button" class="trip-hero-nav trip-hero-next" id="tripHeroNext" aria-label="Next photo">›</button>
+        <div class="trip-hero-counter" aria-live="polite"><span id="tripHeroCurrent">1</span> / <span id="tripHeroTotal">0</span></div>
+        <div class="trip-hero-content">
+            <p class="eyebrow">One trip · Cape Town & Beyond</p>
+            <h1 class="section-title">11 days. Everything included. <em>Nothing left to chance.</em></h1>
+            <p class="section-body">Table Mountain. The Cape Peninsula. Robben Island. The Winelands. A Big Five safari. Dinner at Cape Town's finest table. All curated by people who've done it many times over.</p>
+            <div class="hero-chips">
+                <div class="hero-chip">
+                    <div class="hero-chip-label">Dates</div>
+                    <div class="hero-chip-value">November 2026</div>
+                </div>
+                <div class="hero-chip">
+                    <div class="hero-chip-label">Group Size</div>
+                    <div class="hero-chip-value">10–20 guests</div>
+                </div>
+                <div class="hero-chip">
+                    <div class="hero-chip-label">Base Hotel</div>
+                    <div class="hero-chip-value">Victoria & Alfred by Newmark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="day-timeline">
+        <div style="margin-bottom:48px;">
+            <p class="eyebrow" style="color:var(--gold);">Day by day</p>
+            <h2 class="section-title" style="color:var(--dark);font-size:clamp(32px,4vw,48px);">The full eleven days.</h2>
+            <p class="section-body" style="color:var(--muted);max-width:560px;">Click any day to expand. Every meal, every stop, every moment — planned so you don't have to think about it.</p>
+        </div>
+
+        <div id="days-accordion"></div>
+
+        <div style="margin-top:80px;">
+            <p class="eyebrow" style="color:var(--gold);">What's covered</p>
+            <h2 class="section-title" style="color:var(--dark);font-size:clamp(32px,4vw,48px);">Everything you need. <em style="color:var(--gold);">Nothing you don't.</em></h2>
+        </div>
+
+        <div class="included-grid">
+            <div class="included-item">
+                <div class="included-icon">🏨</div>
+                <div class="included-title">10 nights accommodation</div>
+                <p class="included-desc">Victoria & Alfred Hotel by Newmark, V&A Waterfront. One base hotel for the entire trip — no packing and repacking.</p>
+            </div>
+            <div class="included-item">
+                <div class="included-icon">🚌</div>
+                <div class="included-title">All transfers & transport</div>
+                <p class="included-desc">Airport pickups, daily coach transfers, the Aquila safari coach, everything. You never organise a car.</p>
+            </div>
+            <div class="included-item">
+                <div class="included-icon">🍳</div>
+                <div class="included-title">Daily breakfast</div>
+                <p class="included-desc">Full breakfast at the hotel every morning, plus the Aquila buffet on safari day.</p>
+            </div>
+            <div class="included-item">
+                <div class="included-icon">🦁</div>
+                <div class="included-title">Big Five safari</div>
+                <p class="included-desc">Full day at Aquila Private Game Reserve. Welcome drinks, 3-hour game drive, buffet lunch. Malaria-free.</p>
+            </div>
+            <div class="included-item">
+                <div class="included-icon">🍷</div>
+                <div class="included-title">Winelands experiences</div>
+                <p class="included-desc">Tastings at Waterford, Delaire Graff, and Babylonstoren — including the legendary chocolate & wine pairing.</p>
+            </div>
+            <div class="included-item">
+                <div class="included-icon">🎟</div>
+                <div class="included-title">All entrance fees</div>
+                <p class="included-desc">Table Mountain, Robben Island, Cape Point, Boulders Beach, Aquila — every ticket, every booking handled.</p>
+            </div>
+        </div>
+
+        <div style="margin-top:60px; padding:40px; background:var(--green-pale); border-left:4px solid var(--green); max-width:600px; border-radius: var(--radius-lg);">
+            <p class="eyebrow" style="color:var(--gold);">Pricing</p>
+            <h3 style="font-family:var(--font-serif);font-size:28px;font-weight:300;color:var(--dark);margin-bottom:12px;">Pricing available on enquiry.</h3>
+            <p style="font-size:14px;font-weight:300;line-height:1.7;color:var(--muted);margin-bottom:24px;">Group size, room type, and seasonal rates all affect the final price. We share full pricing on our qualification call — no surprises.</p>
+            <button class="btn-primary" onclick="openModal()">Request Pricing</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-top">
+            <div>
+                <div class="footer-logo">Go <span>South Africa</span></div>
+                <div class="footer-tagline">Small-group travel, personally curated. Cape Town, November 2026.</div>
+            </div>
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">Home</a>
+                <a href="how.html" class="footer-link">How It Works</a>
+                <a href="about-us.html" class="footer-link">About</a>
+                <a href="contact.html" class="footer-link">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-copy">© 2026 Go South Africa. All rights reserved.</p>
+            <p class="footer-copy">gosouthafrica.com</p>
+        </div>
+    </footer>
+
+    <div id="inquiryModal" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2 class="modal-title">Register your interest</h2>
+            <p class="modal-sub">Tell us a little about yourself and we'll be in touch within 24 hours to answer questions and schedule a call.</p>
+            <form class="modal-form" onsubmit="handleModalForm(event)">
+                <div class="form-row">
+                    <input class="form-input" type="text" placeholder="First name" required>
+                    <input class="form-input" type="text" placeholder="Last name">
+                </div>
+                <input class="form-input" type="email" placeholder="Email address" required>
+                <input class="form-input" type="tel" placeholder="Phone (optional)">
+                <textarea class="form-textarea" placeholder="Any questions or things you'd like us to know?"></textarea>
+                <button class="form-submit" type="submit">Send Enquiry</button>
+                <div id="modalSuccess" class="success-message">
+                    <p>✓ Received. We'll be in touch within 24 hours. Welcome to the list.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    /** All images from /assets (non-image files excluded) */
+    const tripHeroImages = [
+      ['assets/Big-5-Sarafi.webp', 'Big Five safari wildlife'],
+      ['assets/Camps-bay-coastline.jpeg', 'Camps Bay coastline'],
+      ['assets/CapeTownSafari.webp', 'Cape Town and safari'],
+      ['assets/Capetownfromabove.webp', 'Cape Town from above'],
+      ['assets/Elephant-Safari.avif', 'Elephant on safari'],
+      ['assets/Elephant2 Safari.jpg', 'Elephants in the bush'],
+      ['assets/Table-Top-Mountain.webp', 'Table Mountain'],
+      ['assets/WineryTours.jpg', 'Cape Winelands vineyards'],
+      ['assets/capeharbour.webp', 'Cape Town harbour'],
+      ['assets/capetownold.webp', 'Historic Cape Town'],
+      ['assets/capewaterfront.webp', 'V&A Waterfront'],
+      ['assets/capewaterfront2.webp', 'Waterfront views'],
+      ['assets/elephant1.jpg', 'Elephant'],
+      ['assets/lion1.jpg', 'Lion'],
+      ['assets/lion2.jpg', 'Lion in the wild'],
+      ['assets/lion3.webp', 'Lion sighting'],
+      ['assets/lionbaby.jpg', 'Lion cub'],
+      ['assets/longstreetcapetown.webp', 'Long Street, Cape Town'],
+      ['assets/rhino1.webp', 'Rhino'],
+      ['assets/rhino2.jpg', 'Rhino on game reserve'],
+      ['assets/table-top-mountain4.jpg', 'Table Mountain view']
+    ];
+
+    function initTripHeroCarousel() {
+      var carousel = document.getElementById('tripHeroCarousel');
+      var curEl = document.getElementById('tripHeroCurrent');
+      var totalEl = document.getElementById('tripHeroTotal');
+      var prevBtn = document.getElementById('tripHeroPrev');
+      var nextBtn = document.getElementById('tripHeroNext');
+      if (!carousel || !curEl || !totalEl || !prevBtn || !nextBtn || !tripHeroImages.length) return;
+
+      tripHeroImages.forEach(function(item, i) {
+        var slide = document.createElement('div');
+        slide.className = 'trip-hero-slide' + (i === 0 ? ' active' : '');
+        slide.setAttribute('aria-hidden', i !== 0 ? 'true' : 'false');
+        var img = document.createElement('img');
+        img.src = item[0];
+        img.alt = item[1];
+        img.loading = i === 0 ? 'eager' : 'lazy';
+        img.decoding = 'async';
+        slide.appendChild(img);
+        carousel.appendChild(slide);
+      });
+
+      var slides = carousel.querySelectorAll('.trip-hero-slide');
+      var index = 0;
+      totalEl.textContent = String(slides.length);
+      curEl.textContent = '1';
+
+      var timer;
+      function show(i) {
+        index = (i + slides.length) % slides.length;
+        slides.forEach(function(s, j) {
+          s.classList.toggle('active', j === index);
+          s.setAttribute('aria-hidden', j !== index ? 'true' : 'false');
+        });
+        curEl.textContent = String(index + 1);
+      }
+      function next() { show(index + 1); }
+      function prev() { show(index - 1); }
+      function resetTimer() {
+        clearInterval(timer);
+        timer = setInterval(next, 6000);
+      }
+
+      nextBtn.addEventListener('click', function() { next(); resetTimer(); });
+      prevBtn.addEventListener('click', function() { prev(); resetTimer(); });
+
+      var hero = document.getElementById('tripHero');
+      if (hero) {
+        hero.addEventListener('mouseenter', function() { clearInterval(timer); });
+        hero.addEventListener('mouseleave', function() { resetTimer(); });
+      }
+
+      resetTimer();
+    }
+
+    const daysData = [
+      { num: 1, title: "Arrival & Welcome", sub: "Settle in, breathe it in, toast to what's ahead.", highlights: ["From 2:00 pm — check in to the Victoria & Alfred Hotel", "4:00–6:30 pm — V&A Waterfront at your own pace", "Table Mountain fills the skyline from your doorstep"], meal: { label: "DINNER  7:30 pm", name: "Tang, V&A Waterfront", desc: "Pan-Asian cuisine, private dining, exceptional cocktails. The perfect first night." } },
+      { num: 2, title: "Table Mountain & The Atlantic Seaboard", sub: "The big visual day. Cape Town at its most iconic.", highlights: ["9:30 am — depart for Table Mountain, early to beat the queue", "10:00 am–12:30 pm — revolving cable car to the summit", "3:00 pm — Camps Bay and Clifton, Atlantic Seaboard drive", "7:30 pm — dinner at The Codfather"], meal: { label: "LUNCH  1:00 pm  ·  DINNER  7:30 pm", name: "The Roundhouse + The Codfather", desc: "Lunch in historic garden terraces above Camps Bay. Dinner at Cape Town's most theatrical seafood institution." } },
+      { num: 3, title: "The Cape Peninsula", sub: "One of the great coastal drives on earth. All day.", highlights: ["7:30 am — early departure, snack boxes on the coach", "9:00–10:30 am — Cape Point & Cape of Good Hope", "11:15 am — Boulders Beach penguin colony", "2:00 pm — Chapman's Peak Drive along the cliff face", "3:00 pm — Noordhoek Farm Village wind-down stop"], meal: { label: "LUNCH  12:30 pm", name: "The Lookout, Hout Bay", desc: "Seafood on the deck over Hout Bay harbour. Fish, calamari, cold local wine. One of the best casual meals on the Peninsula." } },
+      { num: 4, title: "Robben Island & Bo-Kaap", sub: "History in the morning, colour in the afternoon.", highlights: ["9:30 am — ferry to Robben Island from V&A Clock Tower", "UNESCO site, guided by former political prisoners", "2:00–4:30 pm — Bo-Kaap walking food tour", "Cape Malay koeksisters, samoosas, painted houses"], meal: { label: "DINNER  7:00 pm", name: "Beau Constantia, Constantia Valley", desc: "Chef Ivor Jones, perched above the Constantia Valley. Creative modern cuisine, private Protea Pod for the group." } },
+      { num: 5, title: "Free Morning & Cape Malay Cooking Class", sub: "Sleep in. Cook lunch. Eat together.", highlights: ["Until 10:00 am — genuine free morning, no agenda", "10:30 am–1:30 pm — Cape Malay cooking class", "You make it, you eat it — koeksisters, spice blends, curries", "Free afternoon: MOCAA, waterfront, or rest"], meal: { label: "LUNCH  12:30 pm (approx)", name: "Cape Malay Cooking Class", desc: "A feast you cooked yourself. The best kind." } },
+      { num: 6, title: "Winelands — Stellenbosch", sub: "A full day in South Africa's wine heartland.", highlights: ["9:00 am — coach to Stellenbosch (1 hour)", "Waterford Estate: the legendary chocolate & wine pairing", "Delaire Graff: lunch among Damien Hirst and Georg Baselitz", "Babylonstoren: a 17th-century Cape Dutch kitchen garden"], meal: { label: "LUNCH  12:30 pm", name: "Delaire Graff Estate", desc: "Contemporary SA cuisine surrounded by world-class art. One of the best lunches in the country." } },
+      { num: 7, title: "Slow Day & Live Jazz", sub: "Cape Town's soulful side. The night everyone talks about.", highlights: ["Free morning — coffee, the waterfront, no agenda", "12:30 pm — Time Out Market for a relaxed social midday", "7:00 pm — Harbour House for fresh local seafood", "9:00 pm — The Crypt Jazz: underground, candlelit, extraordinary"], meal: { label: "DINNER  7:00 pm", name: "Harbour House + The Crypt Jazz", desc: "Fresh seafood then live jazz in a deconsecrated church. The night that stays with you." } },
+      { num: 8, title: "Free Day", sub: "Optional helicopter. Or nothing at all. Your call.", highlights: ["Optional 9:00 am helicopter over the Cape Peninsula", "Optional: Zeitz MOCAA or Company's Garden", "12:30 pm — Den Anker lunch on the waterfront", "Afternoon: V&A shopping, South African boutiques", "Early night recommended — safari departs 7:00 am tomorrow"], meal: { label: "LUNCH  12:30 pm", name: "Den Anker, V&A Waterfront", desc: "Belgian brasserie, moules frites, cold beer, terrace over the water. A terrace hard to leave." } },
+      { num: 9, title: "Safari Day — Aquila Private Game Reserve", sub: "Big Five. Malaria-free. Two hours from the hotel.", highlights: ["7:00 am — coach departs V&A Hotel", "9:30 am — welcome drinks, then Big Five game drive (3 hours)", "Lion, elephant, rhino, buffalo, leopard — all on the reserve", "1:00 pm — buffet lunch on the reserve", "4:00 pm — coach departs, back by 6:00 pm"], meal: { label: "LUNCH  1:00 pm", name: "Aquila Private Game Reserve — buffet", desc: "Hot buffet on the reserve. Casual, generous. Time to compare sightings." } },
+      { num: 10, title: "Farewell Day", sub: "One last sunset. One last extraordinary meal.", highlights: ["Free morning — pack, wander, revisit a favourite spot", "5:30 pm — sunset drinks at Willaston Bar", "Table Mountain behind you, the Atlantic in front", "7:30 pm — farewell dinner at Fyn, Cape Town's finest table"], meal: { label: "FAREWELL DINNER  7:30 pm", name: "Fyn Restaurant, Cape Town", desc: "Modern South African fine dining. Chef Peter Tempelhoff. Fyn means 'fine' in Afrikaans — he means it." } },
+      { num: 11, title: "Departure Day", sub: "Until next time.", highlights: ["Final breakfast at the Victoria & Alfred Hotel", "Check out by 11:00 am", "Included coach transfer to Cape Town International Airport", "Allow 3 hours before international departure"] }
+    ];
+
+    function buildAccordion() {
+      const container = document.getElementById('days-accordion');
+      if (!container) return;
+      container.innerHTML = daysData.map((d, i) => `
+        <div>
+          <div class="day-header" onclick="toggleDay(${i})" id="dh-${i}">
+            <span class="day-num">Day ${d.num}</span>
+            <span class="day-title">${d.title}</span>
+            <span class="day-toggle">+</span>
+          </div>
+          <div class="day-body" id="db-${i}">
+            <div class="day-body-inner">
+              <div class="day-highlights">
+                <p style="font-size:11px;font-weight:300;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">${d.sub}</p>
+                ${d.highlights.map(h => `<div class="day-highlight-item">${h}</div>`).join('')}
+              </div>
+              ${d.meal ? `<div class="day-meal">
+                <div class="day-meal-label">${d.meal.label}</div>
+                <div class="day-meal-name">${d.meal.name}</div>
+                <div class="day-meal-desc">${d.meal.desc}</div>
+              </div>` : '<div></div>'}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleDay(i) {
+      const header = document.getElementById('dh-' + i);
+      const body = document.getElementById('db-' + i);
+      const isOpen = body.classList.contains('open');
+      document.querySelectorAll('.day-body').forEach(b => b.classList.remove('open'));
+      document.querySelectorAll('.day-header').forEach(h => h.classList.remove('open'));
+      if (!isOpen) {
+        body.classList.add('open');
+        header.classList.add('open');
+      }
+    }
+
+    function openModal() {
+      document.getElementById('inquiryModal').classList.add('open');
+    }
+    function closeModal() {
+      document.getElementById('inquiryModal').classList.remove('open');
+    }
+    document.getElementById('inquiryModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    function handleModalForm(e) {
+      e.preventDefault();
+      document.getElementById('modalSuccess').style.display = 'block';
+      e.target.querySelector('button[type="submit"]').style.display = 'none';
+    }
+
+    const nav = document.getElementById('mainNav');
+    const menuToggle = nav ? nav.querySelector('.nav-menu-toggle') : null;
+    const navLinks = nav ? nav.querySelectorAll('.nav-links .nav-link') : [];
+
+    if (nav && menuToggle) {
+      menuToggle.addEventListener('click', function() {
+        const isOpen = nav.classList.toggle('mobile-open');
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        menuToggle.textContent = isOpen ? 'Close' : 'Menu';
+      });
+
+      navLinks.forEach(function(link) {
+        link.addEventListener('click', function() {
+          if (window.innerWidth <= 900) {
+            nav.classList.remove('mobile-open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggle.textContent = 'Menu';
+          }
+        });
+      });
+
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 900) {
+          nav.classList.remove('mobile-open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+          menuToggle.textContent = 'Menu';
+        }
+      });
+    }
+
+    initTripHeroCarousel();
+    buildAccordion();
+    </script>
+    <script async type='text/javascript' src='https://static.klaviyo.com/onsite/js/Yw7cUD/klaviyo.js?company_id=Yw7cUD'></script>
+    <script type="text/javascript">
+      //Initialize Klaviyo object on page load
+      !function(){if(!window.klaviyo){window._klOnsite=window._klOnsite||[];try{window.klaviyo=new Proxy({},{get:function(n,i){return"push"===i?function(){var n;(n=window._klOnsite).push.apply(n,arguments)}:function(){for(var n=arguments.length,o=new Array(n),w=0;w<n;w++)o[w]=arguments[w];var t="function"==typeof o[o.length-1]?o.pop():void 0,e=new Promise((function(n){window._klOnsite.push([i].concat(o,[function(i){t&&t(i),n(i)}]))}));return e}}})}catch(n){window.klaviyo=window.klaviyo||[],window.klaviyo.push=function(){var n;(n=window._klOnsite).push.apply(n,arguments)}}}}();
+    </script>
+</body>
+</html>
